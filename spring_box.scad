@@ -29,6 +29,7 @@ floor_t   = 3.0;  // floor thickness (holds the dovetails)
 lip_w   = 1.2;    // lid lip wall thickness
 lip_h   = 3.0;    // lid lip depth into box
 lip_tol = 0.25;   // clearance between lip and box walls
+div_gap = 0.5;    // dividers stop this far below the lip so the lid clears them
 tol     = 0.15;   // dovetail clearance per side (tune for your printer)
 dt_len  = 9;      // dovetail length (along X)
 dt_w1   = 6;      // dovetail narrow width (at the seam)
@@ -64,6 +65,9 @@ module pockets(t) {
 module full_box() {
     difference() {
         cube([L, W, box_h]);
+        // open pocket above the divider tops (room for the lid lip), full width
+        translate([end_wall, side_wall, box_h - lip_h - div_gap])
+            cube([L - 2*end_wall, W - 2*side_wall, lip_h + div_gap + eps]);
         for (i = [0 : n_chan-1])
             translate([end_wall, chan_y(i), floor_t])
                 cube([L - 2*end_wall, chan_w, box_h]);
